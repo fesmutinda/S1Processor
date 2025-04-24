@@ -58,13 +58,13 @@ namespace S1Processor.Client_Services
                 }
             }
         }
-        private void Main()
+        private async Task Main()
         {
             Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\tprocessing withdrawals -START....");
             try
             {
                 var client = Config.GetMobileServiceClient();
-                var paybillResponse = client.ProcessLoanRepaymentsAsync();
+                var paybillResponse =await client.ProcessLoanRepaymentsAsync();
                 Console.WriteLine("Response: " + paybillResponse);
             }
             catch (Exception ex)
