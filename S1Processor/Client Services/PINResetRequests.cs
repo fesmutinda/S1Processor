@@ -72,7 +72,7 @@ namespace S1Processor.Client_Services
                 {
                     try
                     {
-                        var activationRqsts = JsonConvert.DeserializeObject<ActivationRequestResponse>(myJsonResponse.ToString());
+                        var activationRqsts = JsonConvert.DeserializeObject<ActivationRequestResponse>(myJsonResponse.return_value);// ToString());
 
                         if (activationRqsts != null && activationRqsts.StatusCode == "000")
                         {
@@ -119,7 +119,7 @@ namespace S1Processor.Client_Services
 
             try
             {
-                var response = await httpClient.PostAsync("http://197.232.170.121:8599/api/registration/changepinRequest", content);
+                var response = await httpClient.PutAsync /*PostAsync*/("http://197.232.170.121:8599/api/registration/changepinRequest", content);
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -138,6 +138,10 @@ namespace S1Processor.Client_Services
 
     }
     #region Models
+    public class GetPinRequests_Result
+    {
+        public string response { get; set; }
+    }
     public class ActivationRequestResponse
     {
         public string StatusCode { get; set; }

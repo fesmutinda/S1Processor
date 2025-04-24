@@ -56,16 +56,15 @@ namespace S1Processor.Client_Services
                     ar.WaitOne(5000);
                 }
             }
-        }
-    
-        private void Main()
+        }    
+        
+        private async Task Main()
         {
-            Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\tprocessing withdrawals -START....");
+            Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\tprocessing Loans Applications -START....");
             try
             {
                 var client = Config.GetMobileServiceClient();
-                var paybillResponse = client.ProcessLoanApplicationsAsync();
-
+                var paybillResponse =await client.ProcessLoanApplicationsAsync();
                 Console.WriteLine("Loan Applications Processed: " + paybillResponse);
             }
             catch (Exception ex)
@@ -76,11 +75,11 @@ namespace S1Processor.Client_Services
                     if ((ex.InnerException.Message != null))
                     {
                         Errorlog.LogEntryOnFile(ex.InnerException.Message);
-                        Console.WriteLine("Error: " + ex.Message);
+                        Console.WriteLine(ex.InnerException.Message);
                     }
                 }
             }
-            Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\tprocessing withdrawals postings -DONE....");
+            Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\tprocessing Loans Applications postings -DONE....");
         }
     }
 }

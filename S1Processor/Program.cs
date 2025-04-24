@@ -14,8 +14,8 @@ namespace S1Processor
         {
             //while (true)
             //{
-            //    //new LoanProcessor().RunService();
-            //    new PaybillSwitch().RunService();
+            //    new LoanProcessor().RunService();
+            //    //new PaybillSwitch().RunService();
             //}
 
             // self service installer/uninstaller
