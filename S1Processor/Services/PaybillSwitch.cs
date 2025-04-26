@@ -1,8 +1,9 @@
 ﻿using log4net;
-using S1Processor.Utils;
+using S1Processor.Clients;
+using S1Processor.Helpers;
 using System.Threading.Tasks;
 
-namespace S1Processor.Client_Services
+namespace S1Processor.Services
 {
     class PaybillSwitch : SERVICE
     {
@@ -15,10 +16,11 @@ namespace S1Processor.Client_Services
         {
             clientCode = "100";
             SaccoName = "Polytech Sacco";
+            processItem = "PaybillSwitch";
         }
         public void RunService()
         {
-            Errorlog.LogEntryOnFile("Started PaybillSwitch");
+            Errorlog.LogEntryOnFile(processItem, "Started PaybillSwitch");
             Console.WriteLine("Started PaybillSwitch");
             while (Shared.StopService == false)
             {
@@ -27,10 +29,10 @@ namespace S1Processor.Client_Services
 
                     Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\ttop of loop....");
                     Parallel.Invoke(
-                                                    () =>
-                                                    {
-                                                        Main();
-                                                    },
+                                                    //() =>
+                                                    //{
+                                                    //    Main();
+                                                    //},
                                                     () =>
                                                     {
                                                         Main();
@@ -41,7 +43,7 @@ namespace S1Processor.Client_Services
                 catch (Exception ex)
                 {
                     _log.Info("Polytech Sacco | 10000 |ERR :\t" + ex);
-                    LogError(ex);
+                    LogError(processItem,ex);
                 }
                 finally
                 {
@@ -58,7 +60,7 @@ namespace S1Processor.Client_Services
                     ar.WaitOne(5000);
                 }
             }
-            Errorlog.LogEntryOnFile("Stopped " + SaccoName);
+            Errorlog.LogEntryOnFile(processItem, "Stopped " + SaccoName);
             Console.WriteLine("Stopped " + SaccoName);
         }
         private async Task Main()
@@ -72,12 +74,12 @@ namespace S1Processor.Client_Services
             }
             catch (Exception ex)
             {
-                Errorlog.LogEntryOnFile(clientCode + ": " + ex.Message);
+                Errorlog.LogEntryOnFile(processItem, clientCode + ": " + ex.Message);
                 if (ex.InnerException != null)
                 {
-                    if ((ex.InnerException.Message != null))
+                    if (ex.InnerException.Message != null)
                     {
-                        Errorlog.LogEntryOnFile(ex.InnerException.Message);
+                        Errorlog.LogEntryOnFile(processItem, ex.InnerException.Message);
                         Console.WriteLine(ex.InnerException.Message);
                     }
                 }

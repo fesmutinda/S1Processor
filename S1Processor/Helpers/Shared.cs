@@ -1,4 +1,4 @@
-namespace S1Processor
+namespace S1Processor.Helpers
 {
 	static class Shared
 	{

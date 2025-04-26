@@ -1,6 +1,4 @@
-using S1Processor.Client_Services;
-
-namespace S1Processor
+namespace S1Processor.Services
 {
 	public class ProcessorService
 	{

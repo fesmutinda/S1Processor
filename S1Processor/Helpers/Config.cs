@@ -1,4 +1,5 @@
 ﻿using PolytechWebRef;
+using S1Processor.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace S1Processor.Utils
+namespace S1Processor.Helpers
 {
     class Config
     {

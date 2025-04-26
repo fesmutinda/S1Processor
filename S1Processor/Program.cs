@@ -1,8 +1,5 @@
-﻿using log4net;
-using S1Processor.Client_Services;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.ServiceProcess;
-using Topshelf;
 
 namespace S1Processor
 {

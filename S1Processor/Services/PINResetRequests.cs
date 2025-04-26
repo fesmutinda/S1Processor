@@ -1,6 +1,8 @@
 ﻿using log4net;
 using Newtonsoft.Json;
-using S1Processor.Utils;
+using S1Processor.Clients;
+using S1Processor.Helpers;
+using S1Processor.Models;
 using SwizzProxy;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace S1Processor.Client_Services
+namespace S1Processor.Services
 {
     class PinResetRequests : SERVICE
     {
@@ -21,10 +23,11 @@ namespace S1Processor.Client_Services
         {
             clientCode = "100";
             SaccoName = "Polytech Sacco";
+            processItem = "PinResetRequests";
         }
         public void RunService()
         {
-            Errorlog.LogEntryOnFile("Started PinResetRequests");
+            Errorlog.LogEntryOnFile(processItem, "Started PinResetRequests");
             Console.WriteLine("Started PinResetRequests");
             while (Shared.StopService == false)
             {
@@ -32,10 +35,10 @@ namespace S1Processor.Client_Services
                 {
                     Console.WriteLine(DateTime.Now.ToString("yy-MM-dd HH:mm:ss.fff") + "\ttop of loop....");
                     Parallel.Invoke(
-                        () =>
-                        {
-                            Main();
-                        },
+                        //() =>
+                        //{
+                        //    Main();
+                        //},
                         () =>
                         {
                             Main();
@@ -45,7 +48,7 @@ namespace S1Processor.Client_Services
                 catch (Exception ex)
                 {
                     _log.Info("Polytech Sacco | 10000 |ERR :\t" + ex);
-                    LogError(ex);
+                    LogError(processItem, ex);
                 }
                 finally
                 {
@@ -88,7 +91,7 @@ namespace S1Processor.Client_Services
                     }
                     catch (Exception exp)
                     {
-                        Errorlog.LogEntryOnFile("Deserialization error: " + exp.Message);
+                        Errorlog.LogEntryOnFile(processItem, "Deserialization error: " + exp.Message);
                     }
                 }
                 else
@@ -98,10 +101,10 @@ namespace S1Processor.Client_Services
             }
             catch (Exception ex)
             {
-                Errorlog.LogEntryOnFile(clientCode + ": " + ex.Message);
+                Errorlog.LogEntryOnFile(processItem, clientCode + ": " + ex.Message);
                 if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
                 {
-                    Errorlog.LogEntryOnFile(ex.InnerException.Message);
+                    Errorlog.LogEntryOnFile(processItem, ex.InnerException.Message);
                     Console.WriteLine("Error: " + ex.Message);
                 }
             }
@@ -112,7 +115,7 @@ namespace S1Processor.Client_Services
         private async Task SendToExternalApi(string phoneNumber)
         {
             using var httpClient = new HttpClient();
-            var payload = new { phoneNumber = phoneNumber, SaccoCode = "100" };
+            var payload = new { phoneNumber, SaccoCode = "100" };
 
             var json = JsonConvert.SerializeObject(payload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -132,28 +135,9 @@ namespace S1Processor.Client_Services
             }
             catch (Exception ex)
             {
-                Errorlog.LogEntryOnFile("API call error for " + phoneNumber + ": " + ex.Message);
+                Errorlog.LogEntryOnFile(processItem, "API call error for " + phoneNumber + ": " + ex.Message);
             }
         }
 
     }
-    #region Models
-    public class GetPinRequests_Result
-    {
-        public string response { get; set; }
-    }
-    public class ActivationRequestResponse
-    {
-        public string StatusCode { get; set; }
-        public string StatusDescription { get; set; }
-        public List<ActivationRequestsItem> ActivationRequests { get; set; }
-    }
-
-    public class ActivationRequestsItem
-    {
-        public string AccountNo { get; set; }
-        public string Phone { get; set; }
-        public string MobileStatus { get; set; }
-    }
-    #endregion
 }
